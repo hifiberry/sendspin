@@ -26,18 +26,16 @@ if(NOT DNSSD_LIB)
   message(FATAL_ERROR "libavahi-compat-libdnssd (dns_sd) not found")
 endif()
 
-# TODO(Task 2): restore sendspind_lib once src/*.cpp units exist.
-# add_library(sendspind_lib STATIC
-#   src/options.cpp src/volume_scale.cpp src/report_json.cpp
-#   src/command_map.cpp src/http_request.cpp src/metadata_map.cpp
-#   src/alsa_sink.cpp src/volume_control.cpp src/acr_reporter.cpp
-#   src/command_server.cpp src/mdns.cpp src/listeners.cpp)
-# target_include_directories(sendspind_lib PUBLIC src)
-# target_link_libraries(sendspind_lib PUBLIC
-#   sendspin ALSA::ALSA CURL::libcurl nlohmann_json::nlohmann_json ${DNSSD_LIB})
+add_library(sendspind_lib STATIC
+  src/options.cpp
+  # later tasks append their src/*.cpp here
+)
+target_include_directories(sendspind_lib PUBLIC src)
+target_link_libraries(sendspind_lib PUBLIC
+  sendspin ALSA::ALSA CURL::libcurl nlohmann_json::nlohmann_json ${DNSSD_LIB})
 
 add_executable(sendspind src/main.cpp)
-# TODO(Task 2): target_link_libraries(sendspind PRIVATE sendspind_lib)
+target_link_libraries(sendspind PRIVATE sendspind_lib)
 
 enable_testing()
 add_subdirectory(tests)
