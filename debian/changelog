@@ -1,7 +1,11 @@
 hifiberry-sendspin (0.1.0) trixie; urgency=medium
 
-  * Initial release: Sendspin player daemon (player/controller/metadata roles),
-    ALSA default-device output, ALSA mixer volume, audiocontrol metadata push,
-    transport command endpoint, mDNS advertisement.
+  * Initial release: Sendspin player daemon for Music Assistant.
+    - player/controller/metadata roles via sendspin-cpp
+    - ALSA default-device output; ALSA mixer volume (both directions)
+    - pushes now-playing metadata + cover art to audiocontrol
+    - reports the audio stream format (codec/sample rate/bit depth) to
+      audiocontrol
+    - transport command endpoint (127.0.0.1:3547) and mDNS advertisement
 
  -- HiFiBerry <support@hifiberry.com>  Wed, 08 Jul 2026 12:00:00 +0000
