@@ -38,6 +38,7 @@ add_library(sendspind_lib STATIC
   src/acr_reporter.cpp
   src/command_server.cpp
   src/mdns.cpp
+  src/listeners.cpp
   # later tasks append their src/*.cpp here
 )
 target_include_directories(sendspind_lib PUBLIC src)
