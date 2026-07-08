@@ -1,3 +1,11 @@
+hifiberry-sendspin (0.1.1) trixie; urgency=medium
+
+  * postinst: restart config-server when it is running so a post-boot install
+    (e.g. via hbos-full) is picked up and the WebUI can start the player. Fixes
+    "can't be started in the UI" after apt-installing onto a running system.
+
+ -- HiFiBerry <support@hifiberry.com>  Wed, 08 Jul 2026 18:00:00 +0000
+
 hifiberry-sendspin (0.1.0) trixie; urgency=medium
 
   * Initial release: Sendspin player daemon for Music Assistant.
