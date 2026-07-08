@@ -1,0 +1,18 @@
+Source: hifiberry-sendspin
+Section: sound
+Priority: optional
+Maintainer: HiFiBerry <support@hifiberry.com>
+Build-Depends: debhelper-compat (= 13), cmake, build-essential,
+ libasound2-dev, libcurl4-openssl-dev, nlohmann-json3-dev,
+ libavahi-compat-libdnssd-dev, git, ca-certificates
+Standards-Version: 4.6.0
+Homepage: https://github.com/hifiberry/sendspin
+
+Package: hifiberry-sendspin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends},
+ libasound2, libcurl4, libavahi-compat-libdnssd1, hifiberry-configurator
+Description: Sendspin player for HiFiBerryOS
+ Renders Music Assistant's native Sendspin stream to the HiFiBerry sound card,
+ reports metadata to audiocontrol, and forwards transport commands to Music
+ Assistant.

@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+# Reload user service manager registration is handled per-user by the WebUI;
+# nothing to enable here — the player is toggled on via the HiFiBerry UI.
+#DEBHELPER#
+exit 0

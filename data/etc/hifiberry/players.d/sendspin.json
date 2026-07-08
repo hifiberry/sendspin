@@ -1,0 +1,7 @@
+{
+    "name": "Music Assistant",
+    "provided_by": "sendspin",
+    "systemd_service": "sendspin",
+    "icon": "sendspin",
+    "allow_change": true
+}

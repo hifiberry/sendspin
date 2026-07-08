@@ -1,0 +1,13 @@
+[Unit]
+Description=Sendspin Player (Music Assistant)
+After=sound.target network.target pipewire.service
+Wants=avahi-daemon.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/start-sendspin
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=default.target

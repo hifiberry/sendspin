@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+override_dh_auto_build:
+	cmake --build build -j$(shell nproc)
+
+override_dh_auto_test:
+	ctest --test-dir build --output-on-failure
+
+override_dh_auto_install:
+	install -D -m0755 build/sendspind debian/hifiberry-sendspin/usr/bin/sendspind
+	install -D -m0755 scripts/start-sendspin.sh debian/hifiberry-sendspin/usr/bin/start-sendspin
+	cp -r data/* debian/hifiberry-sendspin/
