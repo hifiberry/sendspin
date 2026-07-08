@@ -69,6 +69,12 @@ int main(int argc, char** argv) {
     auto& controller = client.add_controller();
     auto& metadata = client.add_metadata();
 
+    // Feed consumed-frame timing back to the player role so it advances past
+    // start-up priming silence into real decoded audio.
+    sink.on_frames_played = [&player](uint32_t frames, int64_t finish_us) {
+        player.notify_audio_played(frames, finish_us);
+    };
+
     player.set_listener(&player_listener);
     metadata.set_listener(&meta_listener);
     client.set_network_provider(&net);

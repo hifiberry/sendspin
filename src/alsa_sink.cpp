@@ -1,5 +1,6 @@
 // src/alsa_sink.cpp
 #include "alsa_sink.h"
+#include <chrono>
 #include <cstdio>
 #include <utility>
 
@@ -33,6 +34,7 @@ bool AlsaSink::configure(unsigned rate, unsigned channels, uint8_t bit_depth) {
         return false;
     }
     channels_ = channels;
+    rate_ = rate;
     frame_bytes_ = channels * (snd_pcm_format_physical_width(fmt) / 8);
     if (frame_bytes_ == 0) frame_bytes_ = 4;
     return true;
@@ -52,6 +54,17 @@ size_t AlsaSink::write(const uint8_t* data, size_t len, unsigned timeout_ms) {
     if (written < 0) {
         std::fprintf(stderr, "alsa: writei failed: %s\n", snd_strerror((int)written));
         return 0;
+    }
+    // Report consumed frames + the client-clock time they finish playing, so the
+    // player role advances past start-up priming silence into real audio.
+    if (on_frames_played && rate_ > 0) {
+        snd_pcm_sframes_t delay = 0;
+        if (snd_pcm_delay(pcm_, &delay) < 0 || delay < 0) delay = 0;
+        int64_t now_us = std::chrono::duration_cast<std::chrono::microseconds>(
+                             std::chrono::steady_clock::now().time_since_epoch())
+                             .count();
+        int64_t finish_us = now_us + (static_cast<int64_t>(delay) * 1000000) / rate_;
+        on_frames_played(static_cast<uint32_t>(written), finish_us);
     }
     return static_cast<size_t>(written) * frame_bytes_;
 }
