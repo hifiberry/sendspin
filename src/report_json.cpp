@@ -19,3 +19,13 @@ std::string make_song_changed(const Song& s) {
 std::string make_position_changed(double seconds) {
     return json({{"type", "position_changed"}, {"position", seconds}}).dump();
 }
+
+std::string make_stream_info(const std::string& codec, unsigned sample_rate,
+                             unsigned bits_per_sample, unsigned channels) {
+    json stream = json::object();
+    if (!codec.empty()) stream["codec"] = codec;
+    if (sample_rate > 0) stream["sample_rate"] = sample_rate;
+    if (bits_per_sample > 0) stream["bits_per_sample"] = bits_per_sample;
+    if (channels > 0) stream["channels"] = channels;
+    return json({{"type", "stream_info"}, {"stream", stream}}).dump();
+}

@@ -29,5 +29,15 @@ int main() {
     json p = json::parse(make_position_changed(42.5));
     assert(p["type"] == "position_changed");
     assert(p["position"] == 42.5);
+
+    json si = json::parse(make_stream_info("FLAC", 44100, 16, 2));
+    assert(si["type"] == "stream_info");
+    assert(si["stream"]["codec"] == "FLAC");
+    assert(si["stream"]["sample_rate"] == 44100);
+    assert(si["stream"]["bits_per_sample"] == 16);
+    assert(si["stream"]["channels"] == 2);
+    // empty/zero fields are omitted
+    json si2 = json::parse(make_stream_info("", 0, 0, 0));
+    assert(si2["stream"].empty());
     return 0;
 }
