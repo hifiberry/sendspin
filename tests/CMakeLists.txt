@@ -15,3 +15,7 @@ add_test(NAME report_json COMMAND test_report_json)
 add_executable(test_command_map test_command_map.cpp)
 target_link_libraries(test_command_map PRIVATE sendspind_lib)
 add_test(NAME command_map COMMAND test_command_map)
+
+add_executable(test_http_request test_http_request.cpp)
+target_link_libraries(test_http_request PRIVATE sendspind_lib)
+add_test(NAME http_request COMMAND test_http_request)
