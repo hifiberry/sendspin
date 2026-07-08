@@ -19,3 +19,7 @@ add_test(NAME command_map COMMAND test_command_map)
 add_executable(test_http_request test_http_request.cpp)
 target_link_libraries(test_http_request PRIVATE sendspind_lib)
 add_test(NAME http_request COMMAND test_http_request)
+
+add_executable(test_metadata_map test_metadata_map.cpp)
+target_link_libraries(test_metadata_map PRIVATE sendspind_lib)
+add_test(NAME metadata_map COMMAND test_metadata_map)
