@@ -27,12 +27,16 @@ class PendingCommands {
     std::mutex mtx_;
 };
 
+/// Display name for a Sendspin codec ("FLAC"/"Opus"/"PCM"), empty if unknown.
+const char* codec_name(sendspin::SendspinCodecFormat c);
+
 class PlayerListener : public sendspin::PlayerRoleListener {
  public:
     PlayerListener(AlsaSink& sink, VolumeControl& vol, AcrReporter& reporter,
-                   sendspin::PlayerRole** player, std::atomic<int>* last_applied)
+                   sendspin::PlayerRole** player, std::atomic<int>* last_applied,
+                   std::atomic<bool>* streaming)
         : sink_(sink), vol_(vol), reporter_(reporter), player_(player),
-          last_applied_(last_applied) {}
+          last_applied_(last_applied), streaming_(streaming) {}
     size_t on_audio_write(uint8_t* data, size_t len, uint32_t timeout_ms) override {
         return sink_.write(data, len, timeout_ms);
     }
@@ -47,6 +51,7 @@ class PlayerListener : public sendspin::PlayerRoleListener {
     AcrReporter& reporter_;
     sendspin::PlayerRole** player_;
     std::atomic<int>* last_applied_;
+    std::atomic<bool>* streaming_;
 };
 
 class MetaListener : public sendspin::MetadataRoleListener {

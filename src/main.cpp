@@ -43,9 +43,10 @@ int main(int argc, char** argv) {
 
     PlayerRole* player_ptr = nullptr;
     std::atomic<int> last_applied{-1};
+    std::atomic<bool> streaming{false};
 
     // Declared before the client so they outlive it (sendspin-cpp: listener must outlive the client); prevents a shutdown-time use-after-free when ~SendspinClient joins the sync task.
-    PlayerListener player_listener(sink, volume, reporter, &player_ptr, &last_applied);
+    PlayerListener player_listener(sink, volume, reporter, &player_ptr, &last_applied, &streaming);
     MetaListener meta_listener(reporter);
     NetProvider net;
 
@@ -92,6 +93,7 @@ int main(int argc, char** argv) {
     mdns.start(opt.name, opt.sendspin_port, "/sendspin");
 
     auto last_poll = std::chrono::steady_clock::now();
+    std::string last_stream_info;
     while (g_running.load()) {
         client.loop();
 
@@ -113,6 +115,20 @@ int main(int argc, char** argv) {
                 uint32_t dur = metadata.get_track_duration_ms();
                 if (dur > 0)
                     reporter.post(make_position_changed(metadata.get_track_progress_ms() / 1000.0));
+            }
+            // stream format -> ACR, once the codec header has been decoded
+            // (codec is not available in the stream params at stream start).
+            if (streaming.load()) {
+                const auto& sp = player.get_current_stream_params();
+                std::string codec = sp.codec.has_value() ? codec_name(*sp.codec) : "";
+                std::string si = make_stream_info(codec, sp.sample_rate.value_or(0),
+                                                  sp.bit_depth.value_or(0), sp.channels.value_or(0));
+                if (si != last_stream_info) {
+                    reporter.post(si);
+                    last_stream_info = si;
+                }
+            } else {
+                last_stream_info.clear();
             }
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));

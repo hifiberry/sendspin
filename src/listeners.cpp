@@ -3,7 +3,7 @@
 #include "metadata_map.h"
 #include "report_json.h"
 
-static const char* codec_name(sendspin::SendspinCodecFormat c) {
+const char* codec_name(sendspin::SendspinCodecFormat c) {
     switch (c) {
         case sendspin::SendspinCodecFormat::FLAC: return "FLAC";
         case sendspin::SendspinCodecFormat::OPUS: return "Opus";
@@ -19,14 +19,16 @@ void PlayerListener::on_stream_start() {
         unsigned ch = p.channels.value_or(2);
         uint8_t bits = p.bit_depth.value_or(16);
         sink_.configure(rate, ch, bits);
-        std::string codec = p.codec.has_value() ? codec_name(*p.codec) : "";
-        reporter_.post(make_stream_info(codec, rate, bits, ch));
     }
+    // The main loop posts stream_info once the codec header is decoded (the
+    // codec is not yet available in the stream params at stream start).
+    streaming_->store(true);
     reporter_.post(make_state_changed("playing"));
 }
 
 void PlayerListener::on_stream_end() {
     sink_.stop();
+    streaming_->store(false);
     reporter_.post(make_state_changed("stopped"));
 }
 
