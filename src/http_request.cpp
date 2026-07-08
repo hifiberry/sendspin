@@ -27,7 +27,15 @@ HttpRequest parse_http_request(const std::string& raw) {
                        [](unsigned char c) { return std::tolower(c); });
         if (key == "content-length") {
             std::string val = line.substr(colon + 1);
-            content_length = std::stol(val);
+            // Guard against a malformed/overflowing Content-Length: std::stol
+            // throws, and this runs on the command-server thread, so an
+            // unguarded throw would abort the whole daemon. Treat a bad value
+            // as an unparseable (incomplete) request instead.
+            try {
+                content_length = std::stol(val);
+            } catch (const std::exception&) {
+                return r;
+            }
         }
     }
 
