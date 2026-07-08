@@ -33,6 +33,7 @@ add_library(sendspind_lib STATIC
   src/command_map.cpp
   src/http_request.cpp
   src/metadata_map.cpp
+  src/alsa_sink.cpp
   # later tasks append their src/*.cpp here
 )
 target_include_directories(sendspind_lib PUBLIC src)
