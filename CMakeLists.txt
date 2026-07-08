@@ -29,6 +29,7 @@ endif()
 add_library(sendspind_lib STATIC
   src/options.cpp
   src/volume_scale.cpp
+  src/report_json.cpp
   # later tasks append their src/*.cpp here
 )
 target_include_directories(sendspind_lib PUBLIC src)
