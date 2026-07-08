@@ -54,8 +54,14 @@ void CommandServer::run() {
         const char* resp = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
         if (req.complete && req.path == "/command") {
             ParsedCommand pc = parse_command(req.body);
-            if (pc.valid) { if (handler_) handler_(pc); }
-            else resp = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+            if (pc.valid) {
+                if (handler_) {
+                    try { handler_(pc); }
+                    catch (...) { std::fprintf(stderr, "command: handler threw; ignoring\n"); }
+                }
+            } else {
+                resp = "HTTP/1.1 400 Bad Request\r\nContent-Length: 0\r\n\r\n";
+            }
         } else {
             resp = "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n";
         }
