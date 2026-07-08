@@ -1,6 +1,7 @@
 #include "options.h"
 #include <cassert>
 #include <cstring>
+#include <stdexcept>
 #include <string>
 
 int main() {
@@ -33,6 +34,22 @@ int main() {
         char* argv[] = {prog, bad, nullptr};
         bool threw = false;
         try { parse_args(2, argv); } catch (const std::exception&) { threw = true; }
+        assert(threw);
+    }
+    // malformed numeric flag -> std::runtime_error
+    {
+        char prog[] = "sendspind"; char a[] = "--command-port"; char v[] = "notanumber";
+        char* argv[] = {prog, a, v, nullptr};
+        bool threw = false;
+        try { parse_args(3, argv); } catch (const std::runtime_error&) { threw = true; }
+        assert(threw);
+    }
+    // trailing garbage -> std::runtime_error
+    {
+        char prog[] = "sendspind"; char a[] = "--command-port"; char v[] = "3547abc";
+        char* argv[] = {prog, a, v, nullptr};
+        bool threw = false;
+        try { parse_args(3, argv); } catch (const std::runtime_error&) { threw = true; }
         assert(threw);
     }
     return 0;
