@@ -40,6 +40,15 @@ int main(int argc, char** argv) {
 
     // sendspin client
     using namespace sendspin;
+
+    PlayerRole* player_ptr = nullptr;
+    std::atomic<int> last_applied{-1};
+
+    // Declared before the client so they outlive it (sendspin-cpp: listener must outlive the client); prevents a shutdown-time use-after-free when ~SendspinClient joins the sync task.
+    PlayerListener player_listener(sink, volume, reporter, &player_ptr, &last_applied);
+    MetaListener meta_listener(reporter);
+    NetProvider net;
+
     SendspinClientConfig cfg;
     cfg.client_id = opt.name;   // stable-ish id; MA also gets a MAC via auto-detect
     cfg.name = opt.name;
@@ -48,9 +57,6 @@ int main(int argc, char** argv) {
     cfg.software_version = "0.1.0";
     cfg.server_port = opt.sendspin_port;
     SendspinClient client(std::move(cfg));
-
-    PlayerRole* player_ptr = nullptr;
-    std::atomic<int> last_applied{-1};
 
     PlayerRoleConfig pcfg;
     pcfg.audio_formats = {
@@ -63,9 +69,6 @@ int main(int argc, char** argv) {
     auto& controller = client.add_controller();
     auto& metadata = client.add_metadata();
 
-    PlayerListener player_listener(sink, volume, reporter, &player_ptr, &last_applied);
-    MetaListener meta_listener(reporter);
-    NetProvider net;
     player.set_listener(&player_listener);
     metadata.set_listener(&meta_listener);
     client.set_network_provider(&net);
