@@ -20,11 +20,17 @@ XB-Extension-Needs-Reboot: no
 # Served by hifiberry-webui itself, so it resolves before the extension is
 # installed and on a device with no internet access.
 #
-# NOT music.svg: that one is drawn on a 115-unit viewBox while every other
-# icon here uses 23, so at the same stroke-width its lines come out five times
-# thinner and antialias to pale grey at the ~40px the card renders. It looks
-# right in Cover.vue, its actual home, where it is drawn large.
-XB-Extension-Icon-Url: /images/svg/music-note-simple-light.svg
+# This is sendspin's own icon (the same one data/etc/hifiberry/players.d/
+# icons/sendspin.svg installs for the Players page), carried by the WebUI
+# from 0.21.9 so it resolves before the extension is installed.
+#
+# The two generic stand-ins tried before both failed, in opposite
+# directions: music.svg is drawn on a 115-unit viewBox where the rest of the
+# set uses 23, so its strokes came out five times too thin and antialiased to
+# grey; music-note-simple-light.svg is a fill-designed silhouette, so with
+# fill:none the stroke traced the outline of the outline and read far too
+# heavy. Check a candidate is genuine stroke geometry, not a filled shape.
+XB-Extension-Icon-Url: /images/svg/sendspin.svg
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
  libasound2 | libasound2t64, libcurl4 | libcurl4t64, libavahi-compat-libdnssd1, hifiberry-configurator

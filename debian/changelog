@@ -1,3 +1,14 @@
+hifiberry-sendspin (0.1.4) trixie; urgency=medium
+
+  * Extension icon: use sendspin's own icon, now carried by
+    hifiberry-webui 0.21.9 so it resolves before the extension is
+    installed. The generic stand-ins were both wrong: music.svg rendered
+    too thin (115-unit viewBox against the set's 23) and
+    music-note-simple-light.svg too heavy (a fill-designed silhouette
+    stroked with fill:none traces the outline of the outline).
+
+ -- HiFiBerry <support@hifiberry.com>  Thu, 20 Aug 2026 12:15:00 +0000
+
 hifiberry-sendspin (0.1.3) trixie; urgency=medium
 
   * Extension icon: use music-note-simple-light.svg instead of music.svg.
