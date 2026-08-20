@@ -1,3 +1,11 @@
+hifiberry-sendspin (0.1.2) trixie; urgency=medium
+
+  * Publish as a HiFiBerry extension: declare the XB-Extension metadata so
+    the package appears in the web interface's extension catalog. Removed
+    from the hbos-full bundle, which now installs it on demand instead.
+
+ -- HiFiBerry <support@hifiberry.com>  Thu, 20 Aug 2026 11:00:00 +0000
+
 hifiberry-sendspin (0.1.1) trixie; urgency=medium
 
   * postinst: restart config-server when it is running so a post-boot install
