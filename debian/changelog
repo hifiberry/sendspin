@@ -1,3 +1,13 @@
+hifiberry-sendspin (0.1.5) trixie; urgency=medium
+
+  * Player descriptor: declare a maintainer at all. The descriptor carried
+    no maintainer_name, so the card showed nothing where every other player
+    shows either a name or a call for one -- silence that read as though
+    the question had never been asked rather than as unmaintained. Now
+    Wanted, so it reads "Looking for maintainer".
+
+ -- HiFiBerry <support@hifiberry.com>  Thu, 20 Aug 2026 14:00:00 +0000
+
 hifiberry-sendspin (0.1.4) trixie; urgency=medium
 
   * Extension icon: use sendspin's own icon, now carried by
