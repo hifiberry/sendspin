@@ -1,0 +1,2 @@
+rm_conffile /etc/hifiberry/players.d/sendspin.json 0.1.7
+rm_conffile /etc/hifiberry/players.d/icons/sendspin.svg 0.1.7

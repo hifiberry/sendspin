@@ -33,7 +33,7 @@ XB-Extension-Needs-Reboot: no
 XB-Extension-Icon-Url: /images/svg/sendspin.svg
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends},
- libasound2 | libasound2t64, libcurl4 | libcurl4t64, libavahi-compat-libdnssd1, hifiberry-configurator
+ libasound2 | libasound2t64, libcurl4 | libcurl4t64, libavahi-compat-libdnssd1, hifiberry-configurator (>= 2.17.6)
 Description: Sendspin player for HiFiBerryOS
  Renders Music Assistant's native Sendspin stream to the HiFiBerry sound card,
  reports metadata to audiocontrol, and forwards transport commands to Music
