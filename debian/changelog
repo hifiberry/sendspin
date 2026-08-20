@@ -1,3 +1,12 @@
+hifiberry-sendspin (0.1.3) trixie; urgency=medium
+
+  * Extension icon: use music-note-simple-light.svg instead of music.svg.
+    music.svg is drawn on a 115-unit viewBox where every other icon uses
+    23, so at the same stroke-width its lines came out five times thinner
+    and rendered as a pale grey smudge next to the other extension cards.
+
+ -- HiFiBerry <support@hifiberry.com>  Thu, 20 Aug 2026 12:00:00 +0000
+
 hifiberry-sendspin (0.1.2) trixie; urgency=medium
 
   * Publish as a HiFiBerry extension: declare the XB-Extension metadata so
