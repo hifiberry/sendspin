@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ALSA, curl, JSON and mDNS/DNS-SD headers are all required by the
+      # top-level CMakeLists.txt (find_package(ALSA/CURL/nlohmann_json) and
+      # the explicit dns_sd/libavahi-compat-libdnssd lookup). build-essential
+      # and cmake are the toolchain itself.
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            libasound2-dev \
+            libcurl4-openssl-dev \
+            nlohmann-json3-dev \
+            libavahi-compat-libdnssd-dev
+
+      # Configure also fetches the sendspin-cpp dependency via
+      # FetchContent, which needs network access.
+      - name: Configure
+        run: cmake -S . -B build
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
