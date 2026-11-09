@@ -5,5 +5,17 @@
     "icon": "sendspin",
     "allow_change": true,
     "maintainer_name": "Wanted",
-    "maintainer_url": "https://github.com/hifiberry/hifiberry-os/blob/hbosng/docs/maintainers-wanted.md"
+    "maintainer_url": "https://github.com/hifiberry/hifiberry-os/blob/hbosng/docs/maintainers-wanted.md",
+    "settings": [
+        {
+            "key": "static_delay_ms",
+            "type": "number",
+            "label": "Static playback delay (ms)",
+            "description": "Static audio delay to compensate for DAC or DSP latency in multi-room setups. Default is 0.",
+            "default": 0,
+            "min": 0,
+            "max": 5000,
+            "step": 1
+        }
+    ]
 }

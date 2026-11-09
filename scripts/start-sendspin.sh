@@ -25,10 +25,23 @@ MIXER=$(config-soundcard --no-eeprom --volume-control-softvol 2>/dev/null)
 HWIDX=$(config-soundcard --no-eeprom --hw 2>/dev/null)
 [ -n "$HWIDX" ] || HWIDX=0
 
+STATIC_DELAY_ARGS=()
+if [ -n "${SENDSPIN_STATIC_DELAY_MS:-}" ]; then
+  STATIC_DELAY_ARGS=(--static-delay-ms "$SENDSPIN_STATIC_DELAY_MS")
+else
+  STATIC_DELAY=$(curl -sf --max-time 2 --retry 3 --retry-delay 1 --retry-connrefused \
+      "http://localhost:1081/api/v1/key/player.sendspin.static_delay_ms?default=0" 2>/dev/null \
+    | sed -n 's/.*"value"[[:space:]]*:[[:space:]]*"\?\([0-9]\+\)"\?.*/\1/p')
+  if [ -n "$STATIC_DELAY" ] && [ "$STATIC_DELAY" -gt 0 ] 2>/dev/null; then
+    STATIC_DELAY_ARGS=(--static-delay-ms "$STATIC_DELAY")
+  fi
+fi
+
 exec /usr/bin/sendspind \
   --alsa-device default \
   --mixer-control "$MIXER" \
   --mixer-device "hw:$HWIDX" \
   --command-port 3547 \
   --acr-url http://localhost:1080/api/player/sendspin/update \
-  --name "$NAME"
+  --name "$NAME" \
+  "${STATIC_DELAY_ARGS[@]}"

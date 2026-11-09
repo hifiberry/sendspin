@@ -13,6 +13,39 @@ int main() {
         assert(o.alsa_device == "default");
         assert(o.command_port == 3547);
         assert(o.sendspin_port == 8928);
+        assert(o.static_delay_ms == 0);
+    }
+    // Parses static-delay-ms (valid range 0-5000)
+    {
+        char prog[] = "sendspind";
+        char a1[] = "--static-delay-ms"; char v1[] = "160";
+        char* argv[] = {prog, a1, v1, nullptr};
+        Options o = parse_args(3, argv);
+        assert(o.static_delay_ms == 160);
+    }
+    {
+        char prog[] = "sendspind";
+        char a1[] = "--static-delay-ms"; char v1[] = "5000";
+        char* argv[] = {prog, a1, v1, nullptr};
+        Options o = parse_args(3, argv);
+        assert(o.static_delay_ms == 5000);
+    }
+    // Out-of-range static-delay-ms throws std::runtime_error
+    {
+        char prog[] = "sendspind";
+        char a1[] = "--static-delay-ms"; char v1[] = "-20";
+        char* argv[] = {prog, a1, v1, nullptr};
+        bool threw = false;
+        try { parse_args(3, argv); } catch (const std::runtime_error&) { threw = true; }
+        assert(threw);
+    }
+    {
+        char prog[] = "sendspind";
+        char a1[] = "--static-delay-ms"; char v1[] = "5001";
+        char* argv[] = {prog, a1, v1, nullptr};
+        bool threw = false;
+        try { parse_args(3, argv); } catch (const std::runtime_error&) { threw = true; }
+        assert(threw);
     }
     // Parses provided values
     {

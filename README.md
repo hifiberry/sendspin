@@ -74,13 +74,14 @@ The daemon is a thin composition of small, independently-testable units:
 
 ```
 sendspind
-  --alsa-device   default                                  (PCM output device)
-  --mixer-control <name>                                   (ALSA mixer control; empty = no volume)
-  --mixer-device  hw:0                                     (mixer card)
-  --command-port  3547                                     (transport-command HTTP port)
-  --acr-url       http://localhost:1080/api/player/sendspin/update
-  --name          <pretty hostname>                        (advertised Sendspin name)
-  --sendspin-port 8928
+  --alsa-device      default                                  (PCM output device)
+  --mixer-control    <name>                                   (ALSA mixer control; empty = no volume)
+  --mixer-device     hw:0                                     (mixer card)
+  --command-port     3547                                     (transport-command HTTP port)
+  --acr-url          http://localhost:1080/api/player/sendspin/update
+  --name             <pretty hostname>                        (advertised Sendspin name)
+  --sendspin-port    8928
+  --static-delay-ms  0                                        (static audio playback delay in ms)
   --version
 ```
 

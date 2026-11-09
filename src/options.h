@@ -10,6 +10,7 @@ struct Options {
     std::string acr_url = "http://localhost:1080/api/player/sendspin/update";
     std::string name = "HiFiBerry";
     uint16_t sendspin_port = 8928;
+    uint16_t static_delay_ms = 0;
 };
 
 Options parse_args(int argc, char** argv);
