@@ -49,6 +49,7 @@ int main(int argc, char** argv) {
     PlayerListener player_listener(sink, volume, reporter, &player_ptr, &last_applied, &streaming);
     MetaListener meta_listener(reporter);
     NetProvider net;
+    ConfigDbPersistenceProvider persistence;
 
     SendspinClientConfig cfg;
     cfg.client_id = opt.name;   // stable-ish id; MA also gets a MAC via auto-detect
@@ -58,6 +59,7 @@ int main(int argc, char** argv) {
     cfg.software_version = "0.1.0";
     cfg.server_port = opt.sendspin_port;
     SendspinClient client(std::move(cfg));
+    client.set_persistence_provider(&persistence);
 
     PlayerRoleConfig pcfg;
     pcfg.audio_formats = {
@@ -65,7 +67,9 @@ int main(int argc, char** argv) {
         {SendspinCodecFormat::OPUS, 2, 48000, 16},
         {SendspinCodecFormat::PCM,  2, 44100, 16},
     };
+    pcfg.initial_static_delay_ms = opt.static_delay_ms;
     auto& player = client.add_player(std::move(pcfg));
+    player.set_static_delay_adjustable(true);
     player_ptr = &player;
     auto& controller = client.add_controller();
     auto& metadata = client.add_metadata();

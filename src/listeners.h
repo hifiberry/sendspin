@@ -67,3 +67,12 @@ class NetProvider : public sendspin::SendspinNetworkProvider {
  public:
     bool is_network_ready() override { return true; }
 };
+
+class ConfigDbPersistenceProvider : public sendspin::SendspinPersistenceProvider {
+ public:
+    explicit ConfigDbPersistenceProvider(
+        std::string config_url = "http://localhost:1081/api/v1/key/player.sendspin.static_delay_ms");
+    bool save_static_delay(uint16_t delay_ms) override;
+ private:
+    std::string config_url_;
+};

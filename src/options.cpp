@@ -29,6 +29,12 @@ Options parse_args(int argc, char** argv) {
         else if (a == "--acr-url") o.acr_url = need(i);
         else if (a == "--name") o.name = need(i);
         else if (a == "--sendspin-port") o.sendspin_port = static_cast<uint16_t>(parse_int_strict(need(i), "--sendspin-port"));
+        else if (a == "--static-delay-ms") {
+            int v = parse_int_strict(need(i), "--static-delay-ms");
+            if (v < 0 || v > 5000)
+                throw std::runtime_error("--static-delay-ms out of range (0-5000): " + std::to_string(v));
+            o.static_delay_ms = static_cast<uint16_t>(v);
+        }
         else throw std::runtime_error("unknown flag: " + a);
     }
     return o;

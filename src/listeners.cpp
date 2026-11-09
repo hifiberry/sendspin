@@ -2,6 +2,8 @@
 #include "listeners.h"
 #include "metadata_map.h"
 #include "report_json.h"
+#include <curl/curl.h>
+#include <utility>
 
 const char* codec_name(sendspin::SendspinCodecFormat c) {
     switch (c) {
@@ -49,4 +51,39 @@ void MetaListener::on_metadata(const sendspin::ServerMetadataStateObject& m) {
 void MetaListener::on_metadata_clear() {
     std::fprintf(stderr, "DIAG on_metadata_clear\n");
     reporter_.post(make_state_changed("stopped"));
+}
+
+static size_t discard_persistence_body(char*, size_t size, size_t nmemb, void*) {
+    return size * nmemb;
+}
+
+ConfigDbPersistenceProvider::ConfigDbPersistenceProvider(std::string config_url)
+    : config_url_(std::move(config_url)) {}
+
+bool ConfigDbPersistenceProvider::save_static_delay(uint16_t delay_ms) {
+    CURL* curl = curl_easy_init();
+    if (!curl) return false;
+
+    std::string body = "{\"value\":\"" + std::to_string(delay_ms) + "\"}";
+    struct curl_slist* headers = curl_slist_append(nullptr, "Content-Type: application/json");
+
+    curl_easy_setopt(curl, CURLOPT_URL, config_url_.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, static_cast<long>(body.size()));
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_TIMEOUT, 2L);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, discard_persistence_body);
+
+    CURLcode rc = curl_easy_perform(curl);
+    long http_code = 0;
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
+
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
+
+    if (rc != CURLE_OK || http_code < 200 || http_code >= 300) {
+        std::fprintf(stderr, "persistence: POST to ConfigDB failed (rc=%d http=%ld)\n", rc, http_code);
+        return false;
+    }
+    return true;
 }
