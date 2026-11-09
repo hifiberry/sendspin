@@ -1,3 +1,15 @@
+hifiberry-sendspin (0.1.8) trixie; urgency=medium
+
+  * Configurable static playback delay, to compensate for DAC or DSP latency
+    in multi-room setups. New option --static-delay-ms (0-5000 ms), exposed
+    as a "Static playback delay" setting on the player in the WebUI and read
+    from player.sendspin.static_delay_ms in ConfigDB at startup. The delay is
+    also adjustable from Music Assistant at runtime, and such changes are
+    written back to ConfigDB so they survive a restart. Contributed by
+    keeshanam (#3).
+
+ -- HiFiBerry <support@hifiberry.com>  Mon, 09 Nov 2026 12:53:55 +0000
+
 hifiberry-sendspin (0.1.7) trixie; urgency=medium
 
   * Ship the WebUI player descriptor and icon from
